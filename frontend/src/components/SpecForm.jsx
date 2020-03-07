@@ -71,27 +71,65 @@ const SpecForm = (props) => {
     // console.log(`Specs form`, form)
     // console.log(`Specs url`, url)
 
+    // const specs = () => {
+    //     const obj = Object.keys(form.formData)
+    //     console.log(`HERE ====>`, form)
+    //     return (
+    //         <div className='col s6'>
+    //             {obj.map((key, i) => (
+    //                 <>
+    //                     <label
+    //                         key={key}
+    //                         contentEditable
+    //                         onKeyDown={handleLabelEdit}
+    //                         onClick={handleLabelClick}
+    //                     >
+    //                         {key}
+    //                     </label>
+    //                     <input
+    //                         type='text'
+    //                         name={key}
+    //                         value={form.formData[key]}
+    //                         className='formInput'
+    //                         onChange={e => setForm({ ...form, formData: { ...form.formData, [e.target.name]: e.target.value }, formSaved: false })}
+    //                     />
+    //                     {/* { i === obj.length - 1 ?
+    //                         <button 
+    //                             className='btn'
+    //                             onClick={() => setForm({ ...form, formData: {...form.formData, 'Edit me': '' }, formSaved: false})}
+    //                         >Add</button>
+    //                         : null
+    //                     } */}
+    //                 </>
+    //             ))}
+    //         </div>
+    //     )
+    // }
+
     const specs = () => {
-        const obj = Object.keys(form.formData)
+        console.log(`HERE ====>`, form.formData)
         return (
             <div className='col s6'>
-                {obj.map((key, i) => (
+                {form.formData.map((obj, i) => (
                     <>
                         <label
-                            key={key}
+                            key={i}
                             contentEditable
-                            onKeyDown={handleLabelEdit}
-                            onClick={handleLabelClick}
+                            onKeyDown={(e) => handleName(e, i, 'name')}
+                            onChange={(e) => handleName(e, i, 'name')}
+                            
                         >
-                            {key}
+                            {obj.name}
                         </label>
+
                         <input
                             type='text'
-                            name={key}
-                            value={form.formData[key]}
+                            name='length'
+                            value={obj.measure}
                             className='formInput'
-                            onChange={e => setForm({ ...form, formData: { ...form.formData, [e.target.name]: e.target.value }, formSaved: false })}
+                            onChange={ (e) => handleLength(e, i, 'measure') }
                         />
+
                         {/* { i === obj.length - 1 ?
                             <button 
                                 className='btn'
@@ -99,10 +137,36 @@ const SpecForm = (props) => {
                             >Add</button>
                             : null
                         } */}
+
                     </>
                 ))}
             </div>
         )
+    }
+
+    const handleName = (e, index, key) => {
+        console.dir(e.target)
+        const formCopy = { ...form }
+        if (e.keyCode === 13) {
+            // formCopy.formData[index][key] = e.target.innerText;
+            // delete formCopy.formData[form.lastEdit]
+            // setForm({ ...formCopy, formSaved: false })
+            e.target.blur()
+        } else if (e.keyCode >= 33 && e.keyCode <= 126) {
+            formCopy.formData[index][key] = e.target.innerText;
+            console.log(`valid key`, e.key)
+        }
+        setForm({ ...formCopy, formSaved: false })
+        e.target.blur()
+        e.target.focus()
+    }
+
+    const handleLength = (e, index, key) => {
+        console.dir(e.target.value)
+        const formCopy = { ...form }
+        formCopy.formData[index][key] = e.target.value;
+        console.log(`=>>>>>>>>>>>`, formCopy)
+        setForm({ ...formCopy, formSaved: false })
     }
 
     const fileChange = e => {
@@ -168,7 +232,7 @@ const SpecForm = (props) => {
         console.log(`Submit button clicked`)
         console.log(form)
         try {
-            await axios.patch(`http://localhost:3100/api/projects/update/form/${projectId}`, {formData: form.formData, name: form.name})
+            await axios.patch(`http://localhost:3100/api/projects/update/form/${projectId}`, { formData: form.formData, name: form.name })
             console.log('Form submitted')
             setForm({ ...form, formSaved: true })
         } catch (error) {
@@ -217,7 +281,7 @@ const SpecForm = (props) => {
                 {designImg()}
             </div>
             <button className={form.formSaved ? 'btn green ' : 'btn red '} onClick={handleSubmit}>
-                { form.formSaved ? 'Save 😁' :  'Save 😬' }
+                {form.formSaved ? 'Save 😁' : 'Save 😬'}
             </button>
         </div>
     )

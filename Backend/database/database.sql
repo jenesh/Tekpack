@@ -101,8 +101,8 @@ VALUES
 INSERT INTO projects
     ( description, img_url, users_id, form_data)
 VALUES
-    ('Basic T-shirt', 'https://pluspng.com/img-png/tshirt-png-outline-blank-t-shirt-outline-1663530-1421.jpg' , 1, '{"Arm length":"6", "Shirt Length":"20", "Shirt Width":"12"}'),
-    ('Blue Jeans', 'https://cdn.clipart.email/fbe42d55ed4f6309210ceaf2520f0181_hand-drawn-fashion-design-mens-jeans-clipart-commercial-use-_570-713.jpeg',2, '{"Leg Length":"30", "Waist":"28"}' ),
+    ('Basic T-shirt', 'https://pluspng.com/img-png/tshirt-png-outline-blank-t-shirt-outline-1663530-1421.jpg' , 1, '[ {"name": "Arm measure", "measure": "6"}, {"name": "Shirt measure", "measure": "20"}, {"name": "Shirt Width", "measure": "12"} ]'),
+    ('Blue Jeans', 'https://cdn.clipart.email/fbe42d55ed4f6309210ceaf2520f0181_hand-drawn-fashion-design-mens-jeans-clipart-commercial-use-_570-713.jpeg',2, '[ {"name": "Leg measure", "measure": "30"}, {"name": "Waist", "measure" :"28"} ]' ),
     ('Dress Socks', 'https://media.istockphoto.com/vectors/sock-template-vector-id512011001?k=6&m=512011001&s=612x612&w=0&h=tNkOx3mG7dRj5X1rKB46mYu77ehGHtH0rsNA1GieDmk=',  4 ,''),
     ('T-shirt', 'https://pluspng.com/img-png/tshirt-png-outline-blank-t-shirt-outline-1663530-1421.jpg', 4, ''),
     ('Plain Hoodie', 'https://i.ya-webdesign.com/images/hoodie-template-png-13.png',  3,'');
@@ -127,11 +127,11 @@ VALUES
 
 INSERT INTO defaultTemplates (template_id, img_name, image, measurements)
 VALUES
-(1,  'T-shirt',  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQe--MMxHACW1xNWTXn6gWiVW2_jfCRsSpUljj7bedwI7oPKrbu', '{"Arm length":"", "Shirt Length":""}'),
-(2, 'Hoodie',  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSN1UtR_Ol4caglGW6edkHVAUS64pz8ysJs8AzSbLbfb4yJxqhl' , '{"Arm length":"10"}'),
-(3,'Jeans', 'https://i.pinimg.com/originals/7e/e7/81/7ee78144307504c7de8c4b50255a0ca8.png', '{"Arm length":"10"}'),
-(4, 'Socks',  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-z5p2XNtx_LZ-MSvGveEDb_leFJlOxJY0K-7tELZHAm8BX0ck', '{"Arm length":"10"}');
--- (5, '',  '', '{"Arm length":"10"}'),
--- (6, '',  '', '{"Arm length":"10"}');
+(1,  'T-shirt',  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQe--MMxHACW1xNWTXn6gWiVW2_jfCRsSpUljj7bedwI7oPKrbu', '[ {"Arm measure":""}, {"Shirt measure":""} ]'),
+(2, 'Hoodie',  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSN1UtR_Ol4caglGW6edkHVAUS64pz8ysJs8AzSbLbfb4yJxqhl' , '[ {"Arm measure":"10"} ]'),
+(3,'Jeans', 'https://i.pinimg.com/originals/7e/e7/81/7ee78144307504c7de8c4b50255a0ca8.png', '[ {"Arm measure":"10"} ]'),
+(4, 'Socks',  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR-z5p2XNtx_LZ-MSvGveEDb_leFJlOxJY0K-7tELZHAm8BX0ck', '[ {"Arm measure":"10"} ]');
+-- (5, '',  '', '{"Arm measure":"10"}'),
+-- (6, '',  '', '{"Arm measure":"10"}');
 
 
