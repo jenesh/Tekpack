@@ -17,7 +17,9 @@ const Overview = (props) => {
             try {
                 // GET PROJECTS BY USER ID
                 // const { data: { payload }} = await axios.get(`/projects/specs/${props.user_id}`)
-                const { data: { payload }} = await axios.get(`/projects/all`)
+                // console.log(payload)
+                // GET ALL Projects
+                const { data: { payload } } = await axios.get(`/projects/all`)
                 setProjects(payload)
             } catch (err) {
                 console.log(err)
@@ -36,11 +38,12 @@ const Overview = (props) => {
         // Make Request to backend to delete a project
         // If success show new list
         // If error display error
-        // try {
-        //     const data = await  axios.post(`/projects/delete/${id}`)
-        // } catch (err) {
-        //  console.log)err
-        // }
+        try {
+            const data = await axios.delete(`http://localhost:3100/api/projects/project/${id}`)
+            console.log(data)
+        } catch (err) {
+            console.log('err', err)
+        }
         setProjects(newList)
     }
 
@@ -50,7 +53,7 @@ const Overview = (props) => {
 
     return (
         <div className='project-overview'>
-            <h1 className='center'>Overview component</h1>
+            {/* <h1 className='center'>Overview component</h1> */}
 
             <div className='row valign-wrapper'>
                 <div className="input-field col s6 pull-s1">

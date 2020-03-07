@@ -3,6 +3,8 @@ import React from 'react'
 const ProjectList = (props) => {
     const { search, projects, getDetailedProject, deleteProject } = props
 
+    console.log(`HERE ====>`, projects)
+
     const projectArr = () => {
         if (search.length === 0) {
             return projects.map(proj => (

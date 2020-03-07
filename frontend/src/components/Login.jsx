@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import pic from '../assets/download.png'
-import { Link } from 'react-router-dom'
+import pic from '../assets/fashion-runwayimg.jpg'
+import { withRouter, Link } from 'react-router-dom'
 
 
 class Login extends Component {
@@ -8,12 +8,15 @@ class Login extends Component {
         super()
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            userEmail: 'owen@pursuit.org',
+            userPassWord: 1234
         }
     }
 
-    componentDidMount() {
-        console.log("Sign in component mounted")
+    componentDidMount = () => {
+        console.log("Log in component mounted")
+        // this.getAllUsers()
     }
 
     handleChange = (e) => {
@@ -23,15 +26,30 @@ class Login extends Component {
         })
     }
 
+    handleFormSubmit = (e) => {
+        e.preventDefault();
+        let { email, userEmail, password, userPassWord } = this.state;
+
+        if ((userEmail === email) && (userPassWord.toString() === password)) {
+            console.log("login successfull")
+            this.props.log(true)
+            this.props.history.push("/projects")
+        } else {
+            console.log("un-successful login")
+        }
+    }
+
+
+
     render() {
-        let {email, password} = this.state
+        let { email, userEmail, userPassWord, password } = this.state
+        console.log(`${userEmail}, ${userPassWord}`)
         return (
             <div className="Login-Page">
-                <img src={pic} alt="brokenLink" />
+                {/* <img src={pic} alt="brokenLink" /> */}
+                <h1>Log In</h1>
 
-                <form>
-                    <button>Sign In</button>
-                    <button>Sign Up</button>
+                <form onSubmit={this.handleFormSubmit}>
 
                     <input
                         type="text"
@@ -43,15 +61,26 @@ class Login extends Component {
 
 
                     <input
-                        type="text"
+                        type="password"
                         placeholder="password"
                         name="password"
                         value={password}
                         onChange={this.handleChange}
                         required />
 
+                    <br />
+
+                    <button class="btn waves-effect waves-light red" type="submit" name="action">Log In
+                    {/* <i class="material-icons right">send</i> */}
+                    </button>
                 </form>
-                <Link to='/signup'><button>Sign Up</button></Link>
+
+                <br />
+
+                <Link to='/signup'>
+                    <button class="btn waves-effect waves-light blue" type="submit" name="action">Sign Up
+                    {/* <i class="material-icons right">send</i> */}
+                    </button></Link>
 
             </div>
         )
@@ -59,4 +88,4 @@ class Login extends Component {
 
 }
 
-export default Login
+export default withRouter(Login)

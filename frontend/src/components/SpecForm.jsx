@@ -9,13 +9,22 @@ const SpecForm = (props) => {
     // const projectId = props.match.params.id;
     console.log(`SpecForm props: `, props)
     // console.log(`SpecForm project id: `, projectId)
+    // const [form, setForm] = useState({
+    //     'Shirt Length': '25in',
+    //     'Shirt Width': '14in',
+    //     'Collar Length': '',
+    //     'Arm width Left': '',
+    //     'Arm width Right': '',
+    // })
     const [form, setForm] = useState({
-        'Shirt Length': '25in',
-        'Shirt Width': '14in',
-        'Collar Length': '',
-        'Arm width Left': '',
-        'Arm width Right': '',
+        formData: null,
+        name: null,
+        projectId: null,
+        userId: null,
+        lastEdit: null,
+        formSaved: true
     })
+
     const [url, setUrl] = useState({
         form: null,
         url: 'https://help.printsome.com/wp-content/uploads/2019/10/T-SHIRT-CHART-SIZES.png',
@@ -28,8 +37,30 @@ const SpecForm = (props) => {
     useEffect(() => {
         const getSpecs = async () => {
             try {
-                const { data: { payload }} = await axios.get(`/measurements/project/${projectId}`)
-                console.log(`Form measurements: `, payload )
+                const { data: { payload } } = await axios.get(`/measurements/project/${projectId}`)
+                console.log(`Form measurements: `, payload)
+                // setForm({
+                //     form: {
+                //         formData: payload.form_data,
+                //         name: payload.description,
+                //         projectsId: payload.projects_id
+                //     },
+                //     url: {
+
+                //     }
+                // })
+                const formData = JSON.parse(payload.form_data)
+                setForm({
+                    formData,
+                    name: payload.description,
+                    projectsId: payload.projects_id,
+                    userId: payload.users_id
+                })
+
+                setUrl({
+                    ...url,
+                    url: payload.img_url
+                })
             } catch (err) {
                 console.log(err)
             }
@@ -37,27 +68,111 @@ const SpecForm = (props) => {
         getSpecs()
     }, [])
 
+    // console.log(`Specs form`, form)
+    // console.log(`Specs url`, url)
+
+    // const specs = () => {
+    //     const obj = Object.keys(form.formData)
+    //     console.log(`HERE ====>`, form)
+    //     return (
+    //         <div className='col s6'>
+    //             {obj.map((key, i) => (
+    //                 <>
+    //                     <label
+    //                         key={key}
+    //                         contentEditable
+    //                         onKeyDown={handleLabelEdit}
+    //                         onClick={handleLabelClick}
+    //                     >
+    //                         {key}
+    //                     </label>
+    //                     <input
+    //                         type='text'
+    //                         name={key}
+    //                         value={form.formData[key]}
+    //                         className='formInput'
+    //                         onChange={e => setForm({ ...form, formData: { ...form.formData, [e.target.name]: e.target.value }, formSaved: false })}
+    //                     />
+    //                     {/* { i === obj.length - 1 ?
+    //                         <button 
+    //                             className='btn'
+    //                             onClick={() => setForm({ ...form, formData: {...form.formData, 'Edit me': '' }, formSaved: false})}
+    //                         >Add</button>
+    //                         : null
+    //                     } */}
+    //                 </>
+    //             ))}
+    //         </div>
+    //     )
+    // }
+
     const specs = () => {
-        const obj = Object.keys(form)
+        console.log(`HERE ====>`, form.formData)
         return (
             <div className='col s6'>
-                {obj.map(key => (
-                    <label key={key}>
-                        {key}
+                {form.formData.map((obj, i) => (
+                    <>
+                        <label
+                            key={i}
+                            contentEditable
+                            onKeyDown={(e) => handleName(e, i, 'name')}
+                            onChange={(e) => handleName(e, i, 'name')}
+                            
+                        >
+                            {obj.name}
+                        </label>
+
                         <input
                             type='text'
-                            name={key}
-                            value={form[key]}
+                            name='length'
+                            value={obj.measure}
                             className='formInput'
-                            onChange={e => setForm({ ...form, [e.target.name]: e.target.value })}
+                            onChange={ (e) => handleLength(e, i, 'measure') }
                         />
-                    </label>
+
+                        {/* { i === obj.length - 1 ?
+                            <button 
+                                className='btn'
+                                onClick={() => setForm({ ...form, formData: {...form.formData, 'Edit me': '' }, formSaved: false})}
+                            >Add</button>
+                            : null
+                        } */}
+
+                    </>
                 ))}
             </div>
         )
     }
 
+    const handleName = (e, index, key) => {
+        console.dir(e.target)
+        const formCopy = { ...form }
+        if (e.keyCode === 13) {
+            // formCopy.formData[index][key] = e.target.innerText;
+            // delete formCopy.formData[form.lastEdit]
+            // setForm({ ...formCopy, formSaved: false })
+            e.target.blur()
+        } else if (e.keyCode >= 33 && e.keyCode <= 126) {
+            formCopy.formData[index][key] = e.target.innerText;
+            console.log(`valid key`, e.key)
+        }
+        setForm({ ...formCopy, formSaved: false })
+        e.target.blur()
+        e.target.focus()
+    }
+
+    const handleLength = (e, index, key) => {
+        console.dir(e.target.value)
+        const formCopy = { ...form }
+        formCopy.formData[index][key] = e.target.value;
+        console.log(`=>>>>>>>>>>>`, formCopy)
+        setForm({ ...formCopy, formSaved: false })
+    }
+
     const fileChange = e => {
+        if (form.formData) {
+            // setForm({ ...form, ))
+        }
         if (e.target.files[0]) {
             console.log(`File changed`, e.target.files[0])
             setUrl({ ...url, form: e.target.files[0] })
@@ -86,28 +201,26 @@ const SpecForm = (props) => {
             },
             completed => {
                 storage.ref(`images/${props.state.user_id}`).child(img.name).getDownloadURL()
-                    .then(newUrl => {
+                    .then(async newUrl => {
+                        console.log(`NEW URL`, newUrl)
                         // Add/Update image url to backend
                         // const res = await axios.put(`/${projectId}`, newUrl)
+                        const res = await axios.patch(`http://localhost:3100/api/projects/update/img/${projectId}`, { url: newUrl })
+                        console.log(`Image upload to backend`, res)
                         setUrl({ form: null, url: newUrl, progress: 0, error: false })
                     })
             }
         )
     }
 
-    const submitSpecForm = async () => {
-        // Check if all fields are filled if not display error and return
-        // Else proceed to posting it to the backend
-        // On success push them/display success component which shows url link, excel download link, and QR code to url link
-    }
-
     console.log(url)
+    console.log({ form })
 
     const designImg = (e) => (
         <div className='design-img col s6'>
             {url.url ? <img src={url.url} className='design-img-display' alt='Design Sketch' /> : null}
 
-            { url.progress > 0 ? <UploadBar progress={url.progress} /> : null }
+            {url.progress > 0 ? <UploadBar progress={url.progress} /> : null}
 
             <UploadForm fileChange={fileChange} error={url.error} />
 
@@ -115,13 +228,61 @@ const SpecForm = (props) => {
         </div>
     )
 
+    const handleSubmit = async () => {
+        console.log(`Submit button clicked`)
+        console.log(form)
+        try {
+            await axios.patch(`http://localhost:3100/api/projects/update/form/${projectId}`, { formData: form.formData, name: form.name })
+            console.log('Form submitted')
+            setForm({ ...form, formSaved: true })
+        } catch (error) {
+            console.log('err', error)
+        }
+    }
+
+    const handleLabelEdit = (e) => {
+        console.log(e.keyCode)
+        // console.log(e.detail)
+        // console.log(e.locale)
+        console.log(e.currentTarget.innerText)
+        // console.dir(e.target)
+        if (e.keyCode === 13) {
+            const formCopy = { ...form }
+            formCopy.formData[e.currentTarget.innerText] = form.formData[form.lastEdit]
+            delete formCopy.formData[form.lastEdit]
+            setForm({ ...formCopy, formSaved: false })
+            e.target.blur()
+        } else if (e.keyCode >= 65 && e.keyCode <= 90) {
+            console.log(`valid key`, e.key)
+        }
+    }
+
+    const handleLabelClick = (e) => {
+        console.dir(e.target.innerText)
+        setForm({ ...form, lastEdit: e.target.innerText })
+    }
+
     return (
         <div>
-            <h1>Spec for {projectId}</h1>
+            <h1
+                className='center-align'
+                contentEditable
+                onKeyDown={e => {
+                    if (e.keyCode === 13) {
+                        console.log(e.currentTarget.innerText)
+                        setForm({ ...form, name: e.currentTarget.innerText })
+                        e.target.blur()
+                    }
+                }}
+            >{form.name}</h1>
+
             <div className='row'>
-                {specs()}
+                {form.formData ? specs() : null}
                 {designImg()}
             </div>
+            <button className={form.formSaved ? 'btn green ' : 'btn red '} onClick={handleSubmit}>
+                {form.formSaved ? 'Save 😁' : 'Save 😬'}
+            </button>
         </div>
     )
 }
