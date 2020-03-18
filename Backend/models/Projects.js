@@ -1,67 +1,83 @@
 const db = require('../database/index.js')
 
 getAllProjects = async () => {
-    try{
+    try {
         const allProjects = await db.any('SELECT * FROM projects')
         return allProjects
-    }catch(error){
+    } catch (error) {
         console.log('mod error', error)
     }
 }
 
-getAllProjectsByUserId = async(users_id) => {
-    try{
+getAllProjectsByUserId = async (users_id) => {
+    try {
         const myProjectsByUserId = await db.any('SELECT * FROM projects WHERE users_id= $1', [users_id])
         return myProjectsByUserId
-    }catch(error){
+    } catch (error) {
         console.log('mod error', error)
     }
 }
 
-getProjectByProjectId = async(projects_id) => {
+getProjectByProjectId = async (projects_id) => {
     console.log(`MODEL: `, projects_id)
-    try{
+    try {
         const myProject = await db.one('SELECT * FROM projects WHERE projects_id = $1', [projects_id])
         return myProject
-    }catch(error){
-        console.log('mod error',error)
+    } catch (error) {
+        console.log('mod error', error)
     }
 }
 
 createNewProject = async(proj) => {
-    const {description, date_made, created_by, quantity, color, img_url} = proj
+    const {description,  img_url, users_id, form_data} = proj
     try{
-        const insertQuery = `INSERT INTO projects (description, date_made, created_by, quantity, color, img_url) 
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`
-        let response = await db.any(insertQuery, [description, date_made, created_by, quantity, color, img_url])
+        const insertQuery = `INSERT INTO projects (description, img_url, users_id, form_data) 
+        VALUES ($1, $2, $3, $4) RETURNING *`
+        let response = await db.any(insertQuery, [description, img_url, users_id, form_data])
         return response;
-    }catch(error){
+    } catch (error) {
         console.log('mod error', error)
     }
 }
+
 
 editProject = async () => {
-    try{
+    try {
 
-    }catch(error){
+    } catch (error) {
         console.log('mod error', error)
     }
 }
-deleteProject = async () => {
-    try{
-        let description = req.params.description
-        let date_made = req.params.date_made
-        let created_by = req.params.created_by
-        let quantity = req.params.quantity
-        let color = req.params.color
-        let img_url = req.params.img_url
-
-        let delQuery = 
-        `DELETE from projects 
-        WHERE description = $1 AND date_made = $2 AND created_by = $3 AND quantity = $4 AND color = $5 AND img_url = $6`
-        await db.none(delQuery, [description, date_made, created_by, quantity, color, img_url])
-    }catch(error){
+deleteProject = async (project_id) => {
+    try {
+        let delQuery =
+            `DELETE from projects 
+        WHERE projects_id = $1`
+        await db.none(delQuery, [project_id])
+    } catch (error) {
         console.log('mod error', error)
+    }
+}
+
+updateProjectFormData = async (formData, project_id) => {
+    console.log(`FORM DATA`, formData)
+    try {
+        const stringFormData = JSON.stringify(formData.formData)
+        const update = await db.one(`UPDATE projects SET form_data = $1, description = $2 WHERE projects_id = $3 RETURNING *`, [stringFormData, formData.name, project_id] )
+        console.log(`UPDATE`, update)
+        return update
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+updateProjectImageUrl = async (imgUrl, project_id) => {
+    try {
+        const update = await db.one(`UPDATE projects SET img_url = $1 WHERE projects_id = $2 RETURNING *`, [imgUrl, project_id] )
+        console.log(update)
+        return update
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -70,5 +86,7 @@ module.exports = {
     getAllProjectsByUserId,
     getProjectByProjectId,
     createNewProject,
-    deleteProject
+    deleteProject,
+    updateProjectFormData,
+    updateProjectImageUrl
 }
