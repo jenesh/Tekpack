@@ -56,7 +56,7 @@ const NavBar = (props) => {
                         onClick={showMenu}
                     >
                         menu
-                    </i>
+                    </i>t
                 </a>
                 {props.isLoggedIn ?
                     state.showHamburger ?
