@@ -16,28 +16,6 @@ class App extends Component {
     user_id: 1,
   }
 
-  privateRoutes = () => (
-    <Switch>
-      <Route path='/login' component={props => <Login state={this.state} log={this.userLoggedIn} />} />
-      <Route path='/signup' component={props => <SignUp state={this.state} />} />
-      <Route path='/projects' exact component={props => <Projects state={this.state} />} />
-      <Route path='/projects/new' component={props => <NewProject state={this.state} />} />
-      <Route path='/home' component={Home} />
-      <Route path='/about' component={About} />
-      <Route path='/projects/:id' component={props => <Projects state={this.state} />} />
-      <Redirect from='/' to='/home' />
-    </Switch>
-  )
-
-  publicRoutes = () => (
-    <Switch>
-      <Route path='/login' component={props => <Login state={this.state} log={this.userLoggedIn} />} />
-      <Route path='/signup' component={props => <SignUp state={this.state} log={this.userLoggedIn} />} />
-      <Route path='/home' component={Home} />
-      <Redirect from='/' to='/home' />
-    </Switch>
-  )
-
   userLoggedIn = (bool) => {
     this.setState({
       loggedIn: bool
@@ -49,6 +27,29 @@ class App extends Component {
       loggedIn: false
     })
   }
+
+  privateRoutes = () => (
+    <Switch>
+      <Route path='/login' component={props => <Login state={this.state} login={this.userLoggedIn} />} />
+      <Route path='/signup' component={props => <SignUp state={this.state} login={this.userLoggedIn} />} />
+      <Route path='/projects' exact component={props => <Projects state={this.state} />} />
+      <Route path='/projects/new' component={props => <NewProject state={this.state} />} />
+      <Route path='/home' component={Home} />
+      <Route path='/about' component={About} />
+      <Route path='/projects/:id' component={props => <Projects state={this.state} />} />
+      <Redirect from='/' to='/home' />
+    </Switch>
+  )
+
+  publicRoutes = () => (
+    <Switch>
+      <Route path='/login' component={props => <Login state={this.state} login={this.userLoggedIn} />} />
+      <Route path='/signup' component={props => <SignUp state={this.state} login={this.userLoggedIn} />} />
+      <Route path='/home' component={Home} />
+      <Redirect from='/' to='/home' />
+    </Switch>
+  )
+
 
 
 

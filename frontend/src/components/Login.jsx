@@ -32,7 +32,7 @@ class Login extends Component {
 
         if ((userEmail === email) && (userPassWord.toString() === password)) {
             console.log("login successfull")
-            this.props.log(true)
+            this.props.login(true)
             this.props.history.push("/projects")
         } else {
             console.log("un-successful login")

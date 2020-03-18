@@ -6,16 +6,7 @@ import UploadForm from './UploadForm'
 import axios from 'axios'
 
 const SpecForm = (props) => {
-    // const projectId = props.match.params.id;
     console.log(`SpecForm props: `, props)
-    // console.log(`SpecForm project id: `, projectId)
-    // const [form, setForm] = useState({
-    //     'Shirt Length': '25in',
-    //     'Shirt Width': '14in',
-    //     'Collar Length': '',
-    //     'Arm width Left': '',
-    //     'Arm width Right': '',
-    // })
     const [form, setForm] = useState({
         formData: null,
         name: null,
@@ -39,16 +30,6 @@ const SpecForm = (props) => {
             try {
                 const { data: { payload } } = await axios.get(`/measurements/project/${projectId}`)
                 console.log(`Form measurements: `, payload)
-                // setForm({
-                //     form: {
-                //         formData: payload.form_data,
-                //         name: payload.description,
-                //         projectsId: payload.projects_id
-                //     },
-                //     url: {
-
-                //     }
-                // })
                 const formData = JSON.parse(payload.form_data)
                 setForm({
                     formData,
@@ -67,9 +48,6 @@ const SpecForm = (props) => {
         }
         getSpecs()
     }, [])
-
-    // console.log(`Specs form`, form)
-    // console.log(`Specs url`, url)
 
     const specs = () => {
         const obj = Object.keys(form.formData)
@@ -106,9 +84,6 @@ const SpecForm = (props) => {
     }
 
     const fileChange = e => {
-        if (form.formData) {
-            // setForm({ ...form, ))
-        }
         if (e.target.files[0]) {
             console.log(`File changed`, e.target.files[0])
             setUrl({ ...url, form: e.target.files[0] })

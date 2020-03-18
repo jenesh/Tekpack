@@ -11,7 +11,8 @@ const ProjectList = (props) => {
                         <span
                             className='project-name'
                             onClick={() => getDetailedProject(proj.projects_id)}>
-                            {proj.projects_id} - {proj.description}
+                            {/* {proj.projects_id} -  */}
+                            {proj.description}
                         </span>
                         <span className='secondary-content'>
                             <i
@@ -36,7 +37,8 @@ const ProjectList = (props) => {
                             <span
                                 className='project-name'
                                 onClick={() => getDetailedProject(proj.projects_id)}>
-                                {proj.projects_id} - {proj.description}
+                                {/* {proj.projects_id} -  */}
+                                {proj.description}
                             </span>
                             <span className='secondary-content'>
                                 <i

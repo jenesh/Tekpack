@@ -1,86 +1,82 @@
-import React, { useState } from 'react'
-import { NavLink, withRouter } from 'react-router-dom'
-import 'materialize-css'
+import React, { useState } from "react";
+import { NavLink, withRouter } from "react-router-dom";
+import "materialize-css";
 
-const NavBar = (props) => {
-    const [state, setState] = useState({
-        showHamburger: false
-    })
+const NavBar = props => {
+  const [state, setState] = useState({
+    showHamburger: false,
+  });
 
-    const route = props.location.pathname
+  const route = props.location.pathname;
 
-    const menuList = [
-        { name: 'Home', path: '/home', icon: 'home' },
-        { name: 'Projects', path: '/projects', icon: 'view_list' },
-        { name: 'About', path: '/about', icon: 'info' }
-    ]
+  const menuList = [
+    { name: "Home", path: "/home", icon: "home" },
+    { name: "Projects", path: "/projects", icon: "view_list" },
+    { name: "About", path: "/about", icon: "info" },
+  ];
 
-    const hamburgerMenu = (arr) => {
-        const listItems = arr.map(item => (
-            <NavLink to={item.path} className='hamburger-item' key={item.name}>
-                <li
-                    onClick={() => showMenu()}
-                    className='collection-item'
-                >
-                    <span className='secondary-content left'>
-                        <i className="small material-icons">{item.icon}</i>
-                    </span>
-                    {item.name}
-                </li>
-            </NavLink>
-        ));
+  const hamburgerMenu = arr => {
+    const listItems = arr.map(item => (
+      <NavLink to={item.path} className="hamburger-item" key={item.name}>
+        <li onClick={() => showMenu()} className="collection-item">
+          <span className="secondary-content left">
+            <i className="small material-icons">{item.icon}</i>
+          </span>
+          {item.name}
+        </li>
+      </NavLink>
+    ));
 
-        return (
-            <ul className="hamburger">
-                {listItems}
-            </ul>
-        )
-    }
+    return <ul className="hamburger">{listItems}</ul>;
+  };
 
-    const showMenu = () => setState({
-        showHamburger: !state.showHamburger
-    })
+  const showMenu = () =>
+    setState({
+      showHamburger: !state.showHamburger,
+    });
 
-    return (
-        <nav className="nav-wrapper red">
-            <div className='container'>
-                <img className="logo" src="TEKPACK.jpg" alt="logo"/>
-                {/* <NavLink to='/home' className='brand-logo'>TekPack</NavLink> */}
-                <a
-                    data-target="mobile-demo"
-                    className="sidenav-trigger">
-                    <i
-                        className="material-icons"
-                        onClick={showMenu}
-                    >
-                        menu
-                    </i>t
-                </a>
-                {props.isLoggedIn ?
-                    state.showHamburger ?
-                        hamburgerMenu(menuList)
-                        : null
-                    :
-                    state.showHamburger ?
-                        hamburgerMenu([{ name: 'Home', path: '/home', icon: 'home' }])
-                        : null
-                }
+  return (
+    <nav className="nav-wrapper red">
+      <div className="container">
+        <img className="logo" src="TEKPACK.jpg" alt="logo" />
+        {/* <NavLink to='/home' className='brand-logo'>TekPack</NavLink> */}
+        <a data-target="mobile-demo" className="sidenav-trigger">
+          <i className="material-icons" onClick={showMenu}>
+            menu
+          </i>
+          t
+        </a>
+        {props.isLoggedIn
+          ? state.showHamburger
+            ? hamburgerMenu(menuList)
+            : null
+          : state.showHamburger
+          ? hamburgerMenu([{ name: "Home", path: "/home", icon: "home" }])
+          : null}
 
-                < ul className='right hide-on-med-and-down'>
-                    <li className={route.slice(0, 5) === '/home' ? 'active' : ''}><NavLink to='/'>Home</NavLink></li>
-                    {props.isLoggedIn ?
-                        <>
-                            <li className={route.slice(0, 9) === '/projects' ? 'active' : ''}><NavLink to='/projects'>Projects</NavLink></li>
-                            <li className={route.slice(0, 6) === '/about' ? 'active' : ''}><NavLink to='/about'>About</NavLink></li>
-                            <li><button className= "btn red btn-flat" onClick ={props.signout}>Sign Out</button></li>
-                            
-                        </>
-                        : null
-                    }
-                </ul>
-            </div>
-        </nav >
-    )
-}
+        <ul className="right hide-on-med-and-down">
+          <li className={route.slice(0, 5) === "/home" ? "active" : ""}>
+            <NavLink to="/">Home</NavLink>
+          </li>
+          {props.isLoggedIn ? (
+            <>
+              <li className={route.slice(0, 9) === "/projects" ? "active" : ""}>
+                <NavLink to="/projects">Projects</NavLink>
+              </li>
+              <li className={route.slice(0, 6) === "/about" ? "active" : ""}>
+                <NavLink to="/about">About</NavLink>
+              </li>
+              <li>
+                <NavLink to="/home" onClick={props.signout}>
+                  Signout
+                </NavLink>
+              </li>
+            </>
+          ) : null}
+        </ul>
+      </div>
+    </nav>
+  );
+};
 
-export default withRouter(NavBar)
+export default withRouter(NavBar);
